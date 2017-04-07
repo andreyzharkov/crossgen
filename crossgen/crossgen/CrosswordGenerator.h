@@ -1,3 +1,10 @@
+#pragma once
+
+//good example of bad-organized code
+//but I was too lazy to make it more readable and understandable in the end
+//long methods, bad structure, not absolutely clear naming...
+//only having written this code I understood how important codestyle is
+
 #include <iostream>
 #include <vector>
 #include <fstream>
@@ -23,7 +30,9 @@
 #define BOOSTED_LENGTH 6
 #define BOOSTED_REPEATS_LONG 10
 
-int myrandom(int i) { return std::rand() % i; }
+int myrandom(int i) {
+	return std::rand() % i;
+}
 
 class Masks {
 public:
@@ -39,7 +48,6 @@ public:
 			it_begin = masks.begin()->second.end();
 			it_end = masks.begin()->second.end();
 			//so in base there is no words with such length
-			//assert(false);
 		}
 	}
 
@@ -53,7 +61,7 @@ public:
 
 	Masks() {}
 	~Masks() {
-		std::cout << "masks size: " << masks.size() << std::endl;
+		//log << "masks size: " << masks.size() << std::endl;
 	}
 
 	Masks(std::string inputFile) {
@@ -106,10 +114,11 @@ public:
 		}
 	}
 private:
-	//templase -> words satisfyed
+	//template -> words satisfyed
 	std::unordered_map<std::string, std::vector<std::string>> masks;
 };
 
+//minor cheat
 Masks refer;
 
 //class describes space in the field for one word
@@ -123,7 +132,7 @@ public:
 	FieldWord() : masks(refer) {}
 	FieldWord(std::pair<int, int> loc, int len, orientation or , Masks& masks) : words_intersect(len, -1),
 		value(len, '.'), other_letter_nums(len, -1),
-		/*possible_values(len + 1), */forbiddenChars(len), masks(masks) {
+		forbiddenChars(len), masks(masks) {
 		selection_values_cnt = 10000;
 		masks.setIterators(len, curr_iter, end_iter);
 		location = loc;
@@ -133,7 +142,6 @@ public:
 		priority = 0;
 		toRecoil = -1;
 		acceleratorLetterNum = -1;
-		//prev_id = -1;
 		difficulty = 0;
 	}
 
@@ -145,7 +153,7 @@ public:
 		value = std::string(length, '.');
 	}
 
-	FieldWord& operator=(FieldWord& arg) {
+	FieldWord& operator=(const FieldWord& arg) {
 		selection_values_cnt = 10000;
 		words_intersect = arg.words_intersect;
 		value = arg.value;
@@ -169,9 +177,6 @@ public:
 	{
 		os << (obj.orientation_ == obj.HORIZONTAL) ? "horizontal" : "vertical";
 		os << " (" << obj.location.first << ", " << obj.location.second << ") ";
-		/*for (int i = 0; i < obj.words_intersect.size(); ++i) {
-		std::cout << obj.words_intersect[i] << " ";
-		}*/
 		os << "length=" << obj.length << "; "
 			<< "value=" << obj.value << "; ";
 		if (obj.isAccelerator) {
@@ -296,7 +301,6 @@ public:
 				}
 
 				if (setValue(words)) {
-					//prev_id = id;
 					used.insert(str);
 					insertedWords.push_back(str);
 					wasIterated = true;
@@ -312,11 +316,6 @@ public:
 	//recoil this word to the state before word with lastRemovedWordPriority priority was set
 	void recoil(int lastRemovedWordPriority, int removeItitiator, std::vector<FieldWord>& otherWorlds) {
 		if (priority == lastRemovedWordPriority) {
-			//no! it was rude mistake
-			/*if (curr_iter != end_iter) {
-			++curr_iter;
-			}*/
-			//prev_value = value;
 			if (isAccelerator) {
 				int j = otherWorlds[removeItitiator].getAcceleratorLetterNum();
 				if (j != -1) {
@@ -338,10 +337,9 @@ public:
 			}
 			wasIterated = false;
 		}
-		////////////????? need if ????????
+
 		if (removeItitiator != priority) {
 			for (int i = 0; i < length; ++i) {
-				//>= || > ????????????????????????????????????
 				if (words_intersect[i] == -1 || otherWorlds[words_intersect[i]].priority >= lastRemovedWordPriority) {
 					value[i] = '.';
 					//recoil changes in not inited words
@@ -364,17 +362,10 @@ public:
 		std::string prev = value;
 		value[at] = letter;
 		nLettersFixed++;
-		//possible_values[nLettersFixed].clear();
 		std::regex regexpr(value);
-		/*for (auto s : possible_values[nLettersFixed - 1]) {
-		if (std::regex_match(*s, regexpr)) {
-		possible_values[nLettersFixed].push_back(s);
-		}
-		}*/
-		//std::vector<std::string>::const_iterator it1, it2;
 
 		selection_values_cnt = masks.getWords(prev, value, curr_iter, end_iter);
-		////////////////??????????????nLetterFixed?????????
+
 		if ((selection_values_cnt < MIN_WORDS_REMAIN && nLettersFixed < 3
 			&& difficulty > nLettersFixed + 2/* && difficulty > 4*/)
 			|| (selection_values_cnt == 0)) {
@@ -382,8 +373,6 @@ public:
 			value[at] = '.';
 			return false;
 		}
-		//curr_iter = it1;
-		//end_iter = it2;
 		return true;
 	}
 
@@ -421,7 +410,6 @@ public:
 				stopWords.insert(*it);
 			}
 		}
-		//std::cout << priority << ": " << stopWords.size() << std::endl;
 	}
 
 	void updateWordsIntersections(std::map<int, int>& new_ids) {
@@ -469,8 +457,8 @@ private:
 	std::vector<std::set<char>> forbiddenChars;
 
 	std::string value;
-	//int prev_id;
 	orientation orientation_;
+
 	//words_intersect[i] - index of FieldWord, which intersect this FieldWord in position i
 	std::vector<int> words_intersect;
 	//other_letter_nums[i] - number of letter (of intersected word) same as letter i
@@ -489,9 +477,9 @@ private:
 	int nLettersFixed;
 };
 
-class CrossGenerator {
+class CrosswordGenerator {
 public:
-	CrossGenerator(std::string fieldFile, std::string vocabeFile) : masks(vocabeFile) {
+	CrosswordGenerator(std::string fieldFile, std::string vocabeFile, ofstream& log) : masks(vocabeFile), log(log) {
 		std::chrono::time_point<std::chrono::system_clock> start, end;
 		int elapsed_time;
 
@@ -544,17 +532,15 @@ public:
 		//cover intersections
 		for (int i = 0; i < horisontal_starts.size(); ++i) {
 			words.emplace_back(horisontal_starts[i], horizontal_lengths[i], FieldWord::orientation::HORIZONTAL, masks);
-			//words.back().setPriority(i);
 		}
 		for (int i = 0; i < vertical_starts.size(); ++i) {
 			words.emplace_back(vertical_starts[i], vertical_lengths[i], FieldWord::orientation::VERTICAL, masks);
 			words.back().rememberIntersections(field, words);
-			//words.back().setPriority(words.size() - 1);
 		}
 
 		end = std::chrono::system_clock::now();
 		elapsed_time = std::chrono::duration_cast<std::chrono::milliseconds> (start - end).count();
-		//std::cout << "basic init: " << elapsed_time << "ms" << std::endl;
+		//log << "basic init: " << elapsed_time << "ms" << std::endl;
 
 		//check if in vocabe are words with such lengths
 		for (int i = 0; i < words.size(); ++i) {
@@ -568,13 +554,13 @@ public:
 		make_order_optimal();
 		end = std::chrono::system_clock::now();
 		elapsed_time = std::chrono::duration_cast<std::chrono::milliseconds> (start - end).count();
-		//std::cout << "reordering: " << elapsed_time << "ms" << std::endl;
+		//log << "reordering: " << elapsed_time << "ms" << std::endl;
 
 		end = std::chrono::system_clock::now();
-		//setStopWords();
+		setStopWords();
 		end = std::chrono::system_clock::now();
 		elapsed_time = std::chrono::duration_cast<std::chrono::milliseconds> (start - end).count();
-		//std::cout << "setting templates: " << elapsed_time << "ms" << std::endl;
+		//log << "setting templates: " << elapsed_time << "ms" << std::endl;
 	}
 
 	bool generate() {
@@ -608,10 +594,10 @@ public:
 			if (priority == 0) {
 				if (words[priority].fillYourself(words, used, insertedWords)) {
 					if (fail_iter_counter > 0) {
-						std::cout << fail_iter_counter << " iterations has passed" << std::endl;
-						std::cout << "max depth reached: " << max_depth << std::endl;
-						std::cout << "max depth changed: " << updated_min << std::endl;
-						std::cout << "returning to 1st word selection" << std::endl;
+						log << fail_iter_counter << " iterations has passed" << std::endl;
+						log << "max depth reached: " << max_depth << std::endl;
+						log << "max depth changed: " << updated_min << std::endl;
+						log << "returning to 1st word selection" << std::endl;
 						fail_iter_counter = 0;
 						max_depth = 0;
 						updated_min = 1000;
@@ -620,14 +606,14 @@ public:
 						end = std::chrono::system_clock::now();
 						elapsed_time = std::chrono::duration_cast<std::chrono::milliseconds>
 							(end - start).count() / 1000.0 * masks.getCount(words[0].getLength());
-						std::cout << "estimated calculation time: " << elapsed_time << " seconds ("
+						log << "estimated calculation time: " << elapsed_time << " seconds ("
 							<< elapsed_time / 3600.0 << " hours)" << std::endl;
 					}
 					fail_iter_counter = 0;
 					max_depth = 0;
 					updated_min = 1000;
 					returns = std::vector<int>(returns.size(), 0);
-					std::cout << "first word chosen: " << words[0].getValue() << std::endl;
+					log << "first word chosen: " << words[0].getValue() << std::endl;
 					n_firsts++;
 					priority++;
 				}
@@ -656,7 +642,7 @@ public:
 					end = std::chrono::system_clock::now();
 					elapsed_time = std::chrono::duration_cast<std::chrono::seconds>
 						(end - start).count();
-					std::cout << "time passed: " << elapsed_time << " seconds" << std::endl;
+					log << "time passed: " << elapsed_time << " seconds" << std::endl;
 					continue;
 				}
 				//else try to recoil and continue
@@ -665,15 +651,15 @@ public:
 				}
 				else {
 					int pr = words[priority].getToRecoil();
-					
+
 					//try to boost selection
 					while ((++returns[pr] >= BOOST_REPEATS_REQUIRED &&
 						words[pr].getSelectionValuesCount() > BOOST_ALLOWED_SIZE)
-							|| (words[pr].getLength() > BOOSTED_LENGTH
-								&& returns[pr] >= std::max(BOOSTED_REPEATS_LONG, 
-									words[pr].getSelectionValuesCount() / 10))) {
+						|| (words[pr].getLength() > BOOSTED_LENGTH
+							&& returns[pr] >= std::max(BOOSTED_REPEATS_LONG,
+								words[pr].getSelectionValuesCount() / 10))) {
 						pr = words[pr].getToRecoil();
-						//std::cout << "BOOST! from " << priority << " to " << pr << std::endl;
+						//log << "BOOST! from " << priority << " to " << pr << std::endl;
 						for (int k = pr + 1; k < returns.size(); ++k) {
 							returns[k] = 0;
 						}
@@ -690,52 +676,55 @@ public:
 				}
 			}
 		}
-		std::cout << "max depth reached: " << max_depth << std::endl;
-		std::cout << "max depth changed: " << updated_min << std::endl;
-		std::cout << "iterations passed: " << fail_iter_counter << std::endl;
-		std::cout << "number of boosts: " << n_boosts << std::endl;
+		log << "max depth reached: " << max_depth << std::endl;
+		log << "max depth changed: " << updated_min << std::endl;
+		log << "iterations passed: " << fail_iter_counter << std::endl;
+		log << "number of boosts: " << n_boosts << std::endl;
 		max_depth = 0;
 		updated_min = 1000;
 
 		end = std::chrono::system_clock::now();
 		elapsed_time = std::chrono::duration_cast<std::chrono::seconds>
 			(end - start).count();
-		std::cout << "calculation time: " << elapsed_time << "seconds" << std::endl;
-
+		log << "calculation time: " << elapsed_time << "seconds" << std::endl;
+		generation_time = elapsed_time;
 		/*make_field_pretty();
 		print();*/
-		/*std::cout << "returns times:" << std::endl;
+		/*log << "returns times:" << std::endl;
 		for (int i = 0; i < returns.size(); ++i) {
-			std::cout << i << ": " << returns[i] << std::endl;
+		log << i << ": " << returns[i] << std::endl;
 		}*/
 		return true;
 	}
-	void print() {
+
+	void print_generated_field() {
+		make_field_pretty();
 		for (int i = 0; i < words.size(); ++i) {
-			std::cout << i << ": " << words[i] << std::endl;
+			log << i << ": " << words[i] << std::endl;
 		}
-		std::cout << "field was:" << std::endl;
+		log << "field was:" << std::endl;
 		for (int i = 0; i < field.size(); ++i) {
-			std::cout << field[i] << std::endl;
+			log << field[i] << std::endl;
 		}
 	}
+
 	static void setCoeff(int val) {
 		coeff = val;
 	}
-	void saveLogTo(std::string filename) {
-
+	int getGenerationTime() {
+		return generation_time;
 	}
 private:
 	int max_depth, updated_min, fail_iter_counter;
 	int trying_iterations;
 	static int coeff;
+	int generation_time;
 
+	//debug log
+	ofstream& log;
 
 	//may be determined in analysys stage
 	bool hasSolution = true;
-
-	//vocabe[i] - set of words in our vocabe with length i
-	//std::vector<std::set<std::string>> vocabe;
 
 	//crossword matrix
 	std::vector<std::string> field;
@@ -784,7 +773,6 @@ private:
 				if (intersectors_ids[i] != -1 &&
 					FieldWordIdsAdded.find(intersectors_ids[i]) == FieldWordIdsAdded.end()) {
 					neighbours.insert(intersectors_ids[i]);
-					///////////////////////////////////////////////////////////////////////here + getLength()
 					neighboursDifficulties.push(std::make_pair(words[intersectors_ids[i]].getDifficulty()
 						+ words[intersectors_ids[i]].getLength(), intersectors_ids[i]));
 				}
@@ -798,16 +786,13 @@ private:
 		}
 
 		words = reordered;
-		////////////////////////////////
+
 		assert(oldToNewId.size() == words.size());
 		for (int i = 0; i < words.size(); ++i) {
 			words[i].updateWordsIntersections(oldToNewId);
 			words[i].setPriority(i);
-			//words[i].setToRecoil(i - 1);
 		}
 
-		//////////////////////////////////////
-		//////////////////////////////////////
 		//here is another reordering, estimated for ordering words in fragments one by one
 		std::vector<int> victim;
 		for (int i = 0; i < words.size(); ++i) {
@@ -864,7 +849,6 @@ private:
 				components[p.second].push_back(p.first);
 			}
 			if (components.size() > 1) {
-				////!!!!!!!!!!!!!!!!!!!!!
 				int crackWordId = optimalOrder.back();
 				for (std::pair<int, std::vector<int>> p : components) {
 					std::vector<int> fragment = (p.second.size() > 2) ? findFragments(p.second) : p.second;
@@ -882,8 +866,6 @@ private:
 						}
 					}
 
-					/////////////////////////////////////
-					//lastIntersected[optimalOrder.size()] = crackWordId
 					words[fragment[0]].setToRecoil(crackWordId);
 					if (n_intersections == 1) {
 						words[fragment[0]].setAcceleratorLetterNum(letter_intersected);
@@ -1008,106 +990,3 @@ private:
 		}
 	}
 };
-
-#define FIELD_FILENAME "..\\..\\input_fields\\field_4.txt"
-#define VOCABE_FILENAME "..\\..\\dictionarys\\rus_unique_words.txt"
-
-//non-random tests (from beginning)
-//field_1 time = 12sec
-//field_3 time = 29sec
-//field_4 time = 120+(depends)sec
-//field_2 time = 863+sec
-
-int main() {
-	std::string field(FIELD_FILENAME);
-	//int seed = time(0);
-	//srand(seed);
-	//std::cout << "field: " << FIELD_FILENAME << std::endl;
-	//std::cout << "MIN_WORDS_REMAIN: " << MIN_WORDS_REMAIN << std::endl;
-	//std::cout << "random seed: " << seed << std::endl;
-	//std::setlocale(LC_ALL, "rus");
-	//CrossGenerator generator(FIELD_FILENAME, VOCABE_FILENAME);
-	////std::cout << "generation started..." << std::endl;
-
-	//if (!generator.generate()) {
-	//	std::cout << "no solution" << std::endl;
-	//}
-	//generator.generate();
-
-	//std::cout << std::endl;
-	//std::cout << std::endl;
-	field = "..\\..\\input_fields\\field_4.txt";
-	for (int i = 0; i < 10; ++i) {
-		int seed = time(0);
-		srand(seed);
-		std::cout << "field: " << field << std::endl;
-		std::cout << "MIN_WORDS_REMAIN: " << MIN_WORDS_REMAIN << std::endl;
-		std::cout << "random seed: " << seed << std::endl;
-		std::setlocale(LC_ALL, "rus");
-		CrossGenerator generator(field, VOCABE_FILENAME);
-		//std::cout << "generation started..." << std::endl;
-
-		if (!generator.generate()) {
-			std::cout << "no solution" << std::endl;
-		}
-		std::cout << std::endl;
-		std::cout << "with preprocessing: " << std::endl;
-		generator.generate();
-		std::cout << std::endl;
-		std::cout << std::endl;
-	}
-	//field = "..\\..\\input_fields\\field_2.txt";
-	//for (int i = 0; i < 10; ++i) {
-	//	int seed = time(0);
-	//	srand(seed);
-	//	std::cout << "field: " << field << std::endl;
-	//	std::cout << "MIN_WORDS_REMAIN: " << MIN_WORDS_REMAIN << std::endl;
-	//	std::cout << "random seed: " << seed << std::endl;
-	//	std::setlocale(LC_ALL, "rus");
-	//	CrossGenerator generator(field, VOCABE_FILENAME);
-	//	//std::cout << "generation started..." << std::endl;
-
-	//	if (!generator.generate()) {
-	//		std::cout << "no solution" << std::endl;
-	//	}
-	//	std::cout << std::endl;
-	//}
-	//std::cout << std::endl;
-	//std::cout << std::endl;
-	//field = "..\\..\\input_fields\\field_4.txt";
-	//for (int i = 0; i < 10; ++i) {
-	//	int seed = time(0);
-	//	srand(seed);
-	//	std::cout << "field: " << field << std::endl;
-	//	std::cout << "MIN_WORDS_REMAIN: " << MIN_WORDS_REMAIN << std::endl;
-	//	std::cout << "random seed: " << seed << std::endl;
-	//	std::setlocale(LC_ALL, "rus");
-	//	CrossGenerator generator(field, VOCABE_FILENAME);
-	//	//std::cout << "generation started..." << std::endl;
-
-	//	if (!generator.generate()) {
-	//		std::cout << "no solution" << std::endl;
-	//	}
-	//	std::cout << std::endl;
-	//}
-	//std::cout << std::endl;
-	//std::cout << std::endl;
-	//field = "..\\..\\input_fields\\field_5.txt";
-	//for (int i = 0; i < 10; ++i) {
-	//	int seed = time(0);
-	//	srand(seed);
-	//	std::cout << "field: " << field << std::endl;
-	//	std::cout << "MIN_WORDS_REMAIN: " << MIN_WORDS_REMAIN << std::endl;
-	//	std::cout << "random seed: " << seed << std::endl;
-	//	std::setlocale(LC_ALL, "rus");
-	//	CrossGenerator generator(field, VOCABE_FILENAME);
-	//	//std::cout << "generation started..." << std::endl;
-
-	//	if (!generator.generate()) {
-	//		std::cout << "no solution" << std::endl;
-	//	}
-	//	std::cout << std::endl;
-	//}
-	system("pause");
-	return 0;
-}
