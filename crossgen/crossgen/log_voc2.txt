@@ -1,0 +1,105 @@
+field: ..\..\input_fields\field_5.txt
+MIN_WORDS_REMAIN: 5
+random seed: 1491605156
+first word chosen: опедвсбярбнбюммшл
+time passed: 160 seconds
+1000000 iterations has passed
+max depth reached: 39
+max depth changed: 1
+returning to 1st word selection
+estimated calculation time: 59176 seconds (16.4378 hours)
+first word chosen: реплнлерпхвеяйнлс
+time passed: 405 seconds
+1000000 iterations has passed
+max depth reached: 39
+max depth changed: 1
+returning to 1st word selection
+first word chosen: меакюцнмюдефмнярэ
+time passed: 556 seconds
+1000000 iterations has passed
+max depth reached: 39
+max depth changed: 1
+returning to 1st word selection
+first word chosen: янакюгмхрекэмхжеи
+field: ..\..\input_fields\field_5.txt
+MIN_WORDS_REMAIN: 1
+random seed: 1491606092
+first word chosen: дпебмеюпюлеияйхлх
+time passed: 161 seconds
+1000000 iterations has passed
+max depth reached: 39
+max depth changed: 1
+returning to 1st word selection
+estimated calculation time: 59434 seconds (16.5094 hours)
+first word chosen: хяйкчвхрекэмнярхч
+time passed: 262 seconds
+1000000 iterations has passed
+max depth reached: 38
+max depth changed: 1
+returning to 1st word selection
+first word chosen: мнбнопхнапереммне
+time passed: 440 seconds
+1000000 iterations has passed
+max depth reached: 39
+max depth changed: 1
+returning to 1st word selection
+first word chosen: мнбнопеярюбкеммни
+time passed: 663 seconds
+1000000 iterations has passed
+max depth reached: 39
+max depth changed: 1
+returning to 1st word selection
+first word chosen: яняпеднрнвеммнярх
+time passed: 768 seconds
+1000000 iterations has passed
+max depth reached: 39
+max depth changed: 1
+returning to 1st word selection
+first word chosen: яняпеднрнвхбюкюяэ
+time passed: 899 seconds
+1000000 iterations has passed
+max depth reached: 39
+max depth changed: 1
+returning to 1st word selection
+first word chosen: яюлнонфепрбнбюмхе
+field: ..\..\input_fields\field_5.txt
+MIN_WORDS_REMAIN: 8
+random seed: 1491607138
+first word chosen: опеюбемюмрмемэйюъ
+50636587 iterations has passed
+max depth reached: 39
+max depth changed: 1
+returning to 1st word selection
+estimated calculation time: 4037242 seconds (1121.46 hours)
+first word chosen: меопхмсфдеммнярэч
+1659311 iterations has passed
+max depth reached: 39
+max depth changed: 1
+returning to 1st word selection
+first word chosen: всбярбхрекэмеиьхи
+67831293 iterations has passed
+max depth reached: 39
+max depth changed: 1
+returning to 1st word selection
+first word chosen: ябернопеярюбкемхе
+time passed: 32047 seconds
+100000000 iterations has passed
+max depth reached: 39
+max depth changed: 1
+returning to 1st word selection
+first word chosen: акюцнмюлепеммнярэ
+4293086 iterations has passed
+max depth reached: 39
+max depth changed: 1
+returning to 1st word selection
+first word chosen: яберкнйнпхвмебнцн
+41826892 iterations has passed
+max depth reached: 39
+max depth changed: 1
+returning to 1st word selection
+first word chosen: опебняундхрекэмше
+9575048 iterations has passed
+max depth reached: 39
+max depth changed: 1
+returning to 1st word selection
+first word chosen: слнонлеьюрекэярбю

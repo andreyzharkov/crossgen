@@ -5,16 +5,16 @@
 
 #include "CrosswordGenerator.h"
 
-#define FIELD_FILENAME "..\\..\\input_fields\\field_4.txt"
-#define VOCABE_FILENAME "..\\..\\dictionarys\\rus_unique_words.txt"
+#define FIELD_FILENAME "..\\..\\input_fields\\field_5.txt"
+#define VOCABE_FILENAME "..\\..\\dictionarys\\litw-win-words.txt"
 
 int main() {
-	ofstream log("log1.txt", std::ofstream::out | std::ofstream::app);
+	ofstream log("log_voc2.txt", std::ofstream::out | std::ofstream::app);
 	
 	std::string field(FIELD_FILENAME);
 	std::vector<int> calc_times;
 
-	int n_tests = 50;
+	int n_tests = 1;
 	for (int i = 0; i < n_tests; ++i) {
 		int seed = time(0);
 		srand(seed);
